@@ -53,7 +53,9 @@
       transform: rotate(-15deg);
       transition: transform 0.3s;
     }
-    .cover-img:nth-child(2) { transform: rotate(15deg); }
+    .cover-img:nth-child(2) {
+      transform: rotate(15deg);
+    }
     .cover-img:hover {
       transform: rotate(0) scale(1.1);
     }
@@ -86,7 +88,9 @@
   </style>
 </head>
 <body>
-  <audio id="bgMusic" src="musica/music.mp3" loop autoplay></audio>
+  <!-- Audio en loop, se restaura tiempo y estado entre páginas -->
+  <audio id="backgroundMusic" src="musica/music.mp3" loop></audio>
+
   <div class="cover">
     <div class="images-container">
       <img src="img/voleyka.png" alt="Vóley" class="cover-img">
@@ -95,5 +99,41 @@
     <h1>¡Bienvenido al Quiz de Vóley!</h1>
     <button class="btn" onclick="location.href='informacion.html'">Comenzar</button>
   </div>
+
+  <script>
+  (function() {
+    const music = document.getElementById('backgroundMusic');
+
+    // Restaurar tiempo y estado al cargar
+    const savedTime = parseFloat(localStorage.getItem('musicTime'));
+    const wasPaused = localStorage.getItem('musicPaused') === 'true';
+    if (!isNaN(savedTime)) {
+      music.currentTime = savedTime;
+    }
+    if (!wasPaused) {
+      music.play().catch(() => {
+        // Si bloquea autoplay, reproducir tras primer clic
+        document.body.addEventListener('click', function handler() {
+          music.play();
+          document.body.removeEventListener('click', handler);
+        });
+      });
+    }
+
+    // Guardar tiempo cada segundo
+    setInterval(() => {
+      localStorage.setItem('musicTime', music.currentTime);
+    }, 1000);
+
+    // Guardar estado al pausar o reproducir
+    music.addEventListener('pause', () => localStorage.setItem('musicPaused', 'true'));
+    music.addEventListener('play', ()  => localStorage.setItem('musicPaused', 'false'));
+
+    // Guardar tiempo al salir de la página
+    window.addEventListener('beforeunload', () => {
+      localStorage.setItem('musicTime', music.currentTime);
+    });
+  })();
+  </script>
 </body>
 </html>
