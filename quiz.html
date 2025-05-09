@@ -63,6 +63,7 @@
   </style>
 </head>
 <body>
+  <audio id="backgroundMusic" src="musica/music.mp3" loop></audio>
   <div class="container">
     <h1>Quiz de Vóley</h1>
     <form id="quizForm">
@@ -166,6 +167,7 @@
   </div>
 
   <script>
+
     document.getElementById("quizForm").addEventListener("submit", function(e) {
       e.preventDefault();
 
@@ -205,6 +207,36 @@
     document.getElementById("retryBtn").addEventListener("click", function() {
       location.reload();
     });
+    (function() {
+      const music = document.getElementById('backgroundMusic');
+
+      // Restaurar tiempo y estado
+      const savedTime = parseFloat(localStorage.getItem('musicTime'));
+      const wasPaused = localStorage.getItem('musicPaused') === 'true';
+      if (!isNaN(savedTime)) music.currentTime = savedTime;
+      if (!wasPaused) {
+        music.play().catch(() => {
+          document.body.addEventListener('click', function handler() {
+            music.play();
+            document.body.removeEventListener('click', handler);
+          });
+        });
+      }
+
+      // Guardar tiempo cada segundo
+      setInterval(() => {
+        localStorage.setItem('musicTime', music.currentTime);
+      }, 1000);
+
+      // Guardar estado de pausa/reproducción
+      music.addEventListener('pause', () => localStorage.setItem('musicPaused', 'true'));
+      music.addEventListener('play',  () => localStorage.setItem('musicPaused', 'false'));
+
+      // Guardar tiempo al salir
+      window.addEventListener('beforeunload', () => {
+        localStorage.setItem('musicTime', music.currentTime);
+      });
+    })();
   </script>
 </body>
 </html>
