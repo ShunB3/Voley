@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>¡Gracias por participar!</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+    
+    :root {
+      --dark-bg: #121212;
+      --primary: #ff8c00;
+      --accent: #ffffff;
+      --gradient: linear-gradient(135deg, #ff8c00, #ff5722);
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: var(--dark-bg);
+      color: var(--accent);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+
+    .container {
+      background: rgba(30, 30, 30, 0.9);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      width: 90%;
+      max-width: 600px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    h1 {
+      color: var(--primary);
+      margin-bottom: 30px;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .score {
+      font-size: 2rem;
+      margin: 30px 0;
+      color: var(--primary);
+    }
+
+    .btn {
+      padding: 12px 25px;
+      background: var(--gradient);
+      color: var(--accent);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+      margin: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255,140,0,0.4);
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: 
+        radial-gradient(circle at top left, rgba(255,140,0,0.2), transparent 70%),
+        radial-gradient(circle at bottom right, rgba(255,87,34,0.2), transparent 70%);
+      background-size: cover;
+      opacity: 0.2;
+      z-index: -1;
+      animation: bgPulse 10s infinite alternate;
+    }
+
+    @keyframes bgPulse {
+      0% { opacity: 0.2; }
+      100% { opacity: 0.4; }
+    }
+  </style>
+</head>
+<body>
+  <audio id="backgroundMusic" src="musica/music.mp3" loop></audio>
+  
+  <div class="container">
+    <h1>¡Gracias por participar en nuestro Quiz de Vóley!</h1>
+    
+    <div class="score" id="finalScore"></div>
+    
+    <p>Esperamos que hayas disfrutado del cuestionario y aprendido algo nuevo sobre voleibol.</p>
+    <img src="img/tu-imagen7.png" alt="Descripción imagen 7" style="width:100%;max-width:340px;margin:28px auto 18px auto;display:block;">
+    <div>
+      <a href="quiz.html" class="btn">Intentar nuevamente</a>
+      <a href="index.html" class="btn">Volver al inicio</a>
+    </div>
+  </div>
+
+  <script>
+    // Obtener el puntaje de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const score = urlParams.get('score');
+    const total = urlParams.get('total');
+    
+    // Mostrar el puntaje
+    document.getElementById('finalScore').textContent = `Puntaje final: ${score}/${total}`;
+  </script>
+
+  <script>
+    // Música persistente
+    (function() {
+      const music = document.getElementById('backgroundMusic');
+      const savedTime = parseFloat(localStorage.getItem('musicTime'));
+      const wasPaused = localStorage.getItem('musicPaused') === 'true';
+      if (!isNaN(savedTime)) music.currentTime = savedTime;
+      if (!wasPaused) {
+        music.play().catch(() => {
+          document.body.addEventListener('click', function handler() {
+            music.play();
+            document.body.removeEventListener('click', handler);
+          });
+        });
+      }
+
+      // Guardar tiempo cada segundo
+      setInterval(() => {
+        localStorage.setItem('musicTime', music.currentTime);
+      }, 1000);
+
+      // Guardar estado de pausa/reproducción
+      music.addEventListener('pause', () => localStorage.setItem('musicPaused', 'true'));
+      music.addEventListener('play',  () => localStorage.setItem('musicPaused', 'false'));
+
+      // Guardar tiempo al salir
+      window.addEventListener('beforeunload', () => {
+        localStorage.setItem('musicTime', music.currentTime);
+      });
+    })();
+  </script>
+</body>
+</html>
