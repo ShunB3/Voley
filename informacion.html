@@ -5,15 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Información de Vóley</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+    
     :root {
       --dark-bg: #121212;
       --dark-card: #1e1e1e;
       --primary: #ff8c00;
       --accent: #ffffff;
+      --gradient: linear-gradient(135deg, #ff8c00, #ff5722);
     }
+    
     body {
       margin: 0;
-      font-family: 'Segoe UI', Tahoma, sans-serif;
+      font-family: 'Poppins', sans-serif;
       background: var(--dark-bg);
       color: var(--accent);
       display: flex;
@@ -21,105 +25,365 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      overflow: hidden;
+      padding: 20px;
+      overflow-x: hidden;
     }
+
     .carousel-container {
-      background: var(--dark-card);
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      background: rgba(30, 30, 30, 0.9);
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
       padding: 40px;
-      max-width: 600px;
+      max-width: 800px;
       width: 90%;
       position: relative;
       text-align: center;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      animation: cardAppear 1s ease-out;
     }
+
+    @keyframes cardAppear {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .slide {
       display: none;
-      font-size: 1.1rem;
-      line-height: 1.5;
-      padding: 20px;
+      font-size: 1.2rem;
+      line-height: 1.6;
+      padding: 30px;
+      opacity: 0;
+      transform: translateX(50px);
+      transition: opacity 0.5s, transform 0.5s;
     }
+
     .slide.active {
       display: block;
+      opacity: 1;
+      transform: translateX(0);
     }
+
+    .slide h2 {
+      color: var(--primary);
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-content {
+      margin-top: 20px;
+      text-align: left;
+    }
+
     .carousel-btn {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: var(--primary);
+      background: var(--gradient);
       border: none;
-      color: var(--dark-bg);
-      padding: 8px 16px;
+      color: var(--accent);
+      padding: 15px 25px;
       cursor: pointer;
-      border-radius: 8px;
+      border-radius: 12px;
       font-weight: bold;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
     }
-    #prevBtn { left: 16px; }
-    #nextBtn { right: 16px; }
+
+    .carousel-btn:hover {
+      transform: translateY(-50%) scale(1.1);
+      box-shadow: 0 5px 15px rgba(255,140,0,0.4);
+    }
+
+    #prevBtn { left: -20px; }
+    #nextBtn { right: -20px; }
+
     .next-quiz-btn {
-      display: block;
-      margin: 20px auto 0;
-      padding: 12px 24px;
-      background: var(--primary);
-      color: var(--dark-bg);
+      display: inline-block;
+      margin: 30px auto 0;
+      padding: 15px 35px;
+      background: var(--gradient);
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 1.1rem;
       border: none;
-      border-radius: 8px;
-      font-size: 1rem;
+      border-radius: 12px;
       cursor: pointer;
       text-decoration: none;
-      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
+
+    .next-quiz-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(255,140,0,0.4);
+    }
+
+    .progress-dots {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      gap: 10px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      background: var(--dark-card);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .dot.active {
+      background: var(--primary);
+      transform: scale(1.2);
+    }
+
     body::before {
       content: '';
-      position: absolute;
+      position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(circle at top left, rgba(255,140,0,0.2), transparent 70%),
-                  url('images/volley-bg-pattern.png');
+      background: 
+        radial-gradient(circle at top left, rgba(255,140,0,0.2), transparent 70%),
+        radial-gradient(circle at bottom right, rgba(255,87,34,0.2), transparent 70%),
+        url('images/volley-bg-pattern.png');
       background-size: cover;
       opacity: 0.2;
       z-index: -1;
+      animation: bgPulse 10s infinite alternate;
+    }
+
+    @keyframes bgPulse {
+      0% { opacity: 0.2; }
+      100% { opacity: 0.4; }
+    }
+    .img-card {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(255,255,255,0.07);
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(255,140,0,0.10);
+      padding: 18px;
+      margin: 28px auto 0 auto;
+      max-width: 340px;
+      transition: box-shadow 0.3s;
+    }
+    .img-card img {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .img-card:hover {
+      box-shadow: 0 8px 32px rgba(255,140,0,0.18);
+    }
+    .img-card img:hover {
+      transform: scale(1.04);
+      box-shadow: 0 8px 32px rgba(255,140,0,0.22);
+    }
+    .lateral-img {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      justify-content: space-between;
+      text-align: left;
+    }
+    .lateral-img .img-card {
+      flex-shrink: 0;
+      max-width: 220px;
+      min-width: 120px;
+      margin: 0;
+    }
+    .lateral-img .text-content {
+      flex: 1;
+    }
+    .right-img .img-card {
+      order: 2;
+    }
+    .right-img .text-content {
+      order: 1;
+    }
+    .left-img .img-card {
+      order: 1;
+    }
+    .left-img .text-content {
+      order: 2;
+    }
+    @media (max-width: 700px) {
+      .lateral-img {
+        flex-direction: column;
+        text-align: left;
+        gap: 16px;
+      }
+      .lateral-img .img-card,
+      .lateral-img .text-content {
+        order: unset !important;
+        width: 100%;
+        max-width: 100%;
+      }
     }
   </style>
 </head>
 <body>
-
-  <!-- Audio en loop, se restaura tiempo y estado entre páginas -->
   <audio id="backgroundMusic" src="musica/music.mp3" loop></audio>
 
   <div class="carousel-container">
     <div class="slide active">
-      El voleibol es un deporte donde dos equipos de seis jugadores buscan enviar el balón por encima de la red hacia el campo contrario. Se anotan puntos cuando el balón toca el suelo del equipo rival o cometen errores en el pase o recepción.
-    </div>
-    <div class="slide">
-      Cada equipo tiene hasta tres toques para devolver el balón. Se utilizan golpes de antebrazos, dedos (colocación) y remates. No se permite sujetar ni lanzar el balón: debe ser golpeado limpiamente.
-    </div>
-    <div class="slide">
-      El saque da inicio a cada jugada y se realiza desde detrás de la línea de fondo. El jugador dispone de 8 segundos para ejecutar el saque, y puede hacerlo con la mano abierta o el puño cerrado. Cuando el equipo recupera el saque, debe rotar sus posiciones.
-    </div>
-    <div class="slide">
-      Los partidos oficiales se juegan al mejor de cinco sets. Los primeros cuatro se juegan a 25 puntos y el quinto, si es necesario, a 15 puntos. En todos los casos se requiere una ventaja de 2 puntos para ganar un set.
-    </div>
-    <div class="slide">
-      La red mide 2.43 m para hombres y 2.24 m para mujeres. El bloqueo, que ocurre en la red, cuenta como un toque. Los árbitros se encargan de aplicar las reglas, controlar los tiempos y sancionar cualquier falta como invasiones o dobles toques.
+      <h2>Fundamentos del Voleibol</h2>
+      <div class="slide-content lateral-img right-img">
+        <div class="text-content">
+          <p>El voleibol es un deporte dinámico que combina habilidad, estrategia y trabajo en equipo...</p>
+          <ul>
+            <li>Mantener el balón en el aire</li>
+            <li>Realizar hasta tres toques por equipo</li>
+            <li>Enviar el balón al campo contrario por encima de la red</li>
+            <li>Evitar que el balón toque el suelo en su propio campo</li>
+          </ul>
+        </div>
+        <div class="img-card">
+          <img src="img/tu-imagen1.jpg" alt="Descripción imagen 1">
+        </div>
+      </div>
     </div>
 
-    <button id="prevBtn" class="carousel-btn" onclick="changeSlide(-1)">❮</button>
-    <button id="nextBtn" class="carousel-btn" onclick="changeSlide(1)">❯</button>
+    <div class="slide">
+      <h2>Técnicas Básicas</h2>
+      <div class="slide-content lateral-img left-img">
+        <div class="img-card">
+          <img src="img/tu-imagen2.jpg" alt="Descripción imagen 2">
+        </div>
+        <div class="text-content">
+          <p>Las técnicas fundamentales del voleibol incluyen:</p>
+          <ul>
+            <li>Saque: Puede ser flotante o con potencia</li>
+            <li>Recepción: Usando antebrazos o "mancheta"</li>
+            <li>Colocación: Con toque de dedos para precisión</li>
+            <li>Remate: Golpe potente para anotar</li>
+            <li>Bloqueo: Defensa en la red</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h2>Reglas del Juego</h2>
+      <div class="slide-content lateral-img right-img">
+        <div class="text-content">
+          <p>Aspectos clave del reglamento:</p>
+          <ul>
+            <li>Rotación obligatoria al ganar el saque</li>
+            <li>No se puede tocar la red durante el juego</li>
+            <li>El balón no puede ser retenido o acompañado</li>
+            <li>Se necesitan 25 puntos para ganar un set (con diferencia de 2)</li>
+            <li>Los partidos se juegan al mejor de 5 sets</li>
+          </ul>
+        </div>
+        <div class="img-card">
+          <img src="img/tu-imagen4.jpg" alt="Descripción imagen 3">
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h2>Posiciones y Roles</h2>
+      <div class="slide-content lateral-img left-img">
+        <div class="img-card">
+          <img src="img/tu-imagen6.jpg" alt="Descripción imagen 4">
+        </div>
+        <div class="text-content">
+          <p>Cada jugador tiene un rol específico:</p>
+          <ul>
+            <li>Colocador: Dirige el juego ofensivo</li>
+            <li>Opuesto: Principal atacante</li>
+            <li>Centrales: Especialistas en bloqueo</li>
+            <li>Receptores: Atacantes y defensores versátiles</li>
+            <li>Líbero: Especialista en defensa</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h2>Dimensiones y Equipamiento</h2>
+      <div class="slide-content lateral-img right-img">
+        <div class="text-content">
+          <p>Especificaciones técnicas importantes:</p>
+          <ul>
+            <li>Cancha: 18 x 9 metros</li>
+            <li>Altura de la red: 2.43m (hombres) y 2.24m (mujeres)</li>
+            <li>Zona de saque: 9 metros de ancho</li>
+            <li>Línea de ataque: 3 metros desde la red</li>
+            <li>Balón: Circunferencia de 65-67 cm</li>
+          </ul>
+        </div>
+        <div class="img-card">
+          <img src="img/tu-imagen5.png" alt="Descripción imagen 5">
+        </div>
+      </div>
+    </div>
+
+    <button id="prevBtn" class="carousel-btn">❮</button>
+    <button id="nextBtn" class="carousel-btn">❯</button>
+
+    <div class="progress-dots">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
   </div>
 
-  <a href="quiz.html" class="next-quiz-btn">Ir al Quiz</a>
+  <a href="quiz.html" class="next-quiz-btn">¡Comenzar el Quiz!</a>
 
   <script>
-    // Carrusel
+    // Carrusel mejorado
     let slideIndex = 0;
     const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
     function showSlide(idx) {
-      slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+      slides.forEach(s => {
+        s.classList.remove('active');
+        s.style.transform = 'translateX(50px)';
+        s.style.opacity = '0';
+      });
+      dots.forEach(d => d.classList.remove('active'));
+      
+      slides[idx].classList.add('active');
+      dots[idx].classList.add('active');
+      
+      setTimeout(() => {
+        slides[idx].style.transform = 'translateX(0)';
+        slides[idx].style.opacity = '1';
+      }, 50);
     }
+
     function changeSlide(delta) {
       slideIndex = (slideIndex + delta + slides.length) % slides.length;
       showSlide(slideIndex);
     }
+
+    // Agregar event listeners para los botones
+    prevBtn.addEventListener('click', () => changeSlide(-1));
+    nextBtn.addEventListener('click', () => changeSlide(1));
+
+    // Navegación por puntos
+    dots.forEach((dot, idx) => {
+      dot.addEventListener('click', () => {
+        slideIndex = idx;
+        showSlide(slideIndex);
+      });
+    });
 
     // Música persistente
     (function() {
@@ -153,6 +417,5 @@
       });
     })();
   </script>
-
 </body>
 </html>
